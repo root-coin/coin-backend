@@ -44,8 +44,8 @@ exports.createToken = async (req, res) => {
           );
           res.cookie('loginTK', token, {
             httpOnly: true,
-            secure: false,
-            sameSite: 'None',
+            secure: true,
+            sameSite: 'Lax',
           });
           res.status(200).send({ result: 'success' });
         } else {
@@ -65,8 +65,8 @@ exports.createToken = async (req, res) => {
 exports.logout = (req, res) => {
   res.cookie('loginTK', '', {
     httpOnly: true,
-    secure: false,
-    sameSite: 'None',
+    secure: true,
+    sameSite: 'Lax',
   });
 
   res.status(200).send({ msg: 'Logged out' });
