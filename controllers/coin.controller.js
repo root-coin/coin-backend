@@ -27,10 +27,10 @@ exports.getCoinPrice = (req, res, next) => {
       const price = {
         x: new Date(time1),
         y: [
+          Number(element.start_price.N),
           Number(element.height_price.N),
           Number(element.lowest_price.N),
           Number(element.average_price.N),
-          Number(element.start_price.N),
         ],
       };
       const amount = {
