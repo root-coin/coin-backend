@@ -52,3 +52,26 @@ exports.delete = (item, resultCallback) => {
     }
   });
 };
+
+exports.find = (item, resultCallback) => {
+  var params = {
+    TableName: 'coin',
+    KeyConditionExpression: 'dataType = :d',
+    FilterExpression: '#id = :id',
+    ExpressionAttributeNames: {
+      '#id': item.find,
+    },
+    ExpressionAttributeValues: {
+      ':d': { S: item.dataType },
+      ':id': { S: item.value },
+    },
+  };
+  console.log(params);
+  ddb.query(params, (err, data) => {
+    if (err) {
+      resultCallback(err, null);
+      return;
+    }
+    resultCallback(null, data.Items);
+  });
+};
