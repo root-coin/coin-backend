@@ -24,7 +24,7 @@ exports.read = (item, resultCallback) => {
     TableName: 'coin',
     Key: item,
   };
-
+  console.log(params);
   ddb.getItem(params, function (err, data) {
     if (err) {
       resultCallback(err, null);
