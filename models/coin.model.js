@@ -21,17 +21,31 @@ class Coin {
   }
 
   static create(data, resultCallback) {
-    const d = {
-      start_price: { N: data.start_price },
-      average_price: { N: data.average_price },
-      height_price: { N: data.height_price },
-      lowest_price: { N: data.lowest_price },
-      total_amount: { N: data.total_amount },
-      coin_id: { S: data.coin_id },
-      id: { S: String(data.trade_time) },
-      dataType: { S: 'coin' },
+    const datas = [];
+    data.forEach((element) => {
+      const el = {
+        PutRequest: {
+          Item: {
+            start_price: { N: element.start_price },
+            average_price: { N: element.average_price },
+            height_price: { N: element.height_price },
+            lowest_price: { N: element.lowest_price },
+            total_amount: { N: element.total_amount },
+            coin_id: { S: element.coin_id },
+            id: { S: String(element.trade_time) },
+            dataType: { S: 'coin' },
+          },
+        },
+      };
+      datas.push(el);
+    });
+
+    const params = {
+      RequestItems: {
+        coin: datas,
+      },
     };
-    db.create(d, (err, result) => {
+    db.batchCreate(params, (err, result) => {
       if (err) {
         resultCallback(err, null);
         return;
