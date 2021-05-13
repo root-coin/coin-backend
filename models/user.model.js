@@ -56,7 +56,7 @@ class User {
     };
     var readData = {
       dataType: { S: 'user' },
-      id: user.user_id,
+      id: { S: user.user_id },
     };
     db.read(readData, dbResultCallback);
   }
