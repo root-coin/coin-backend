@@ -20,11 +20,9 @@ exports.createToken = async (req, res) => {
         if (derivedKey.toString('hex') === data.user_password) {
           const token = jwt.sign(
             {
-              userId: userInfo.userId,
-              userName: userInfo.userName,
-              phoneNo: userInfo.phoneNo,
-              orgCode: userInfo.orgCode,
-              userType: userInfo.userType,
+              userId: data.user_id,
+              userPassword: data.user_password,
+              userNickname: data.user_nickname,
             },
             KEY,
             {
