@@ -5,7 +5,10 @@ class User {
     this.user_nickname = user.userNickname || '';
   }
 
-  static create() {}
+  static create(user, resultCallback) {
+    console.log(user);
+    resultCallback(null, 'good');
+  }
 
   static update() {}
 
