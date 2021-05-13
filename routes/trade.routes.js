@@ -10,4 +10,6 @@ router.post('/save-data', coin.saveInfo);
 
 router.post('/transaction/buy/:coinId', auth.verifyToken, coin.buy);
 
+router.post('/transaction/sell/:coinId', auth.verifyToken, coin.sell);
+
 module.exports = router;
