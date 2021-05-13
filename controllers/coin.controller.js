@@ -50,6 +50,7 @@ exports.getCoinPrice = (req, res, next) => {
 
 exports.saveInfo = (req, res, next) => {
   const { data } = req.body;
+  console.log(req.body);
   console.log(data);
   Coin.create(data, (err, result) => {
     if (err) {
