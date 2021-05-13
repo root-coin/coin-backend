@@ -74,7 +74,7 @@ exports.new = (req, res, next) => {
         if (encryptErr) {
           throw encryptErr;
         }
-        user.userPassword = derivedKey.toString('hex');
+        user.user_password = derivedKey.toString('hex');
         user.salt = salt;
         User.create(user, (err, result) => {
           if (err) {
