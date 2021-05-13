@@ -5,8 +5,22 @@ const KEY = process.env.TOKEN_KEY;
 
 exports.createToken = async (req, res) => {
   const user = new User(req.body);
-  const resultCallback = (err, data) =>
-    crypto.pbkdf2(
+  const resultCallback = (err, data) =>{
+    //console.log(data);
+    if(err){
+      console.log("Error at createToken: ", err);
+      res.status(500).send({
+        result: "Internal Error"
+      });
+      return;
+    }
+    else if(data === undefined || data === null){
+      res.status(400).send({
+        result: "Failed to login"
+      });
+      return;
+    }
+      crypto.pbkdf2(
       req.body.userPassword,
       data.salt,
       100000,
@@ -33,13 +47,18 @@ exports.createToken = async (req, res) => {
             secure: false,
             sameSite: 'None',
           });
-          res.status(200).send({ result: 'sucess' });
+          res.status(200).send({ result: 'success' });
         } else {
-          res.status(400).send({ result: 'fail' });
+          res.status(400).send({ result: 'Password Mismatch\n' });
         }
       }
-    );
-
+    );}
+  if(user.user_id == "" || user.user_password == ""){
+    res.status(400).send({
+      result: 'No input'
+    });
+    return;
+  }
   User.read(user, resultCallback);
 };
 
@@ -56,6 +75,12 @@ exports.logout = (req, res) => {
 exports.new = (req, res, next) => {
   const user = new User(req.body);
   console.log(user);
+  if(user.user_id == "" || user.user_password == ""){
+    res.status(400).send({
+      result: 'No input'
+    });
+    return;
+  }
   crypto.randomBytes(64, (randomErr, buf) => {
     if (randomErr) {
       throw randomErr;
@@ -76,6 +101,7 @@ exports.new = (req, res, next) => {
         console.log(user);
         User.create(user, (err, result) => {
           if (err) {
+            console.log("err:", err);
             res.status(500).send({ err });
             return;
           }
@@ -88,8 +114,15 @@ exports.new = (req, res, next) => {
 
 exports.checkId = (req, res, next) => {
   const user = new User(req.body);
+  if(user.user_id == "" || user.user_password == ""){
+    res.status(400).send({
+      result: 'No input'
+    });
+    return;
+  }
   User.read(user, (err, result) => {
     if (err) {
+      console.log("error: ", err);
       res.status(500).send({ err });
       return;
     }

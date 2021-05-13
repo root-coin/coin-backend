@@ -7,13 +7,11 @@ AWS.config = {
 const ddb = new AWS.DynamoDB();
 
 exports.create = (item, resultCallback) => {
-  var params = {
+  const params = {
     TableName: 'coin',
     Item: item,
   };
-
-  console.log(params);
-
+  //console.log(params);
   ddb.putItem(params, function (err, data) {
     if (err) {
       resultCallback(err, null);
@@ -24,11 +22,11 @@ exports.create = (item, resultCallback) => {
 };
 
 exports.read = (item, resultCallback) => {
-  var params = {
+  const params = {
     TableName: 'coin',
     Key: item,
   };
-  console.log(params);
+  //console.log(params);
   ddb.getItem(params, function (err, data) {
     if (err) {
       resultCallback(err, null);
@@ -39,7 +37,7 @@ exports.read = (item, resultCallback) => {
 };
 
 exports.delete = (item, resultCallback) => {
-  var params = {
+  const params = {
     TableName: 'coin',
     Key: item,
   };
