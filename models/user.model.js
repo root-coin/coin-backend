@@ -89,8 +89,8 @@ class User {
 
   static sell(userId, coinData, addPoint, resultCallback) {
     const key = {
-      dataType: { S: 'userPoint' },
-      id: { S: userId },
+      dataType: { S: 'userCoin' },
+      id: { S: userId + '/' + coinData.id },
     };
     db.read(key, (err, data) => {
       if (err) {
@@ -98,29 +98,24 @@ class User {
         return;
       }
       console.log(data);
-      const resultPoint = data.point.N - needPoint;
-      if (resultPoint < 0) {
+      const resultQ = Number(data.quantity.N) - coinData.quantity;
+      if (resultQ < 0) {
         resultCallback(null, { status: 400, msg: 'oring' });
         return;
       }
-      const createData = {
+      const key = {
         dataType: { S: 'userPoint' },
         id: { S: userId },
-        point: { N: String(resultPoint) },
       };
-      db.create(createData, (err, result) => {
+      db.read(key, (err, data) => {
         if (err) {
           resultCallback(err, null);
           return;
         }
         const createData = {
-          dataType: { S: 'userTrade' },
-          id: { S: moment().format() },
-          coinId: { S: coinData.id },
-          quantity: { N: String(coinData.quantity) },
-          price: { N: String(coinData.price) },
-          point: { N: String(needPoint) },
-          userId: { S: userId },
+          dataType: { S: 'userPoint' },
+          id: { S: userId },
+          point: { N: String(Number(data.point.N) + addPoint) },
         };
         db.create(createData, (err, result) => {
           if (err) {
@@ -128,23 +123,36 @@ class User {
             return;
           }
           const createData = {
-            dataType: { S: 'userCoin' },
-            id: { S: moment().format() },
-            coinId: { S: coinData.id },
+            dataType: { S: 'userTrade' },
+            id: { S: userId + '/' + coinData.id },
+            type: { S: 'sell' },
             quantity: { N: String(coinData.quantity) },
-            userId: { S: userId },
+            price: { N: String(coinData.price) },
+            point: { N: String(addPoint) },
           };
           db.create(createData, (err, result) => {
             if (err) {
               resultCallback(err, null);
               return;
             }
-            resultCallback(null, result);
+            const createData = {
+              dataType: { S: 'userCoin' },
+              id: { S: userId + '/' + coinData.id },
+              quantity: { N: String(resultQ) },
+            };
+            db.create(createData, (err, result) => {
+              if (err) {
+                resultCallback(err, null);
+                return;
+              }
+              resultCallback(null, result);
+            });
           });
         });
       });
     });
   }
+
   static buy(userId, coinData, needPoint, resultCallback) {
     const key = {
       dataType: { S: 'userPoint' },
@@ -156,7 +164,7 @@ class User {
         return;
       }
       console.log(data);
-      const resultPoint = data.point.N - needPoint;
+      const resultPoint = Number(data.point.N) - needPoint;
       if (resultPoint < 0) {
         resultCallback(null, { status: 400, msg: 'oring' });
         return;
