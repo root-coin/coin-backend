@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const KEY = process.env.TOKEN_KEY;
 
 exports.createToken = async (req, res) => {
+  const user = new User(req.body);
   const resultCallback = (err, data) =>
     crypto.pbkdf2(
       req.body.userPassword,
@@ -54,7 +55,7 @@ exports.logout = (req, res) => {
 
 exports.new = (req, res, next) => {
   const user = new User(req.body);
-
+  console.log(user);
   crypto.randomBytes(64, (randomErr, buf) => {
     if (randomErr) {
       throw randomErr;
@@ -72,6 +73,7 @@ exports.new = (req, res, next) => {
         }
         user.user_password = derivedKey.toString('hex');
         user.salt = salt;
+        console.log(user);
         User.create(user, (err, result) => {
           if (err) {
             res.status(500).send({ err });
@@ -81,5 +83,20 @@ exports.new = (req, res, next) => {
         });
       }
     );
+  });
+};
+
+exports.checkId = (req, res, next) => {
+  const user = new User(req.body);
+  User.read(user, (err, result) => {
+    if (err) {
+      res.status(500).send({ err });
+      return;
+    }
+    if (result) {
+      res.status(409).send({ err: 'not uniform' });
+    } else {
+      next();
+    }
   });
 };
