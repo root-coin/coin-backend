@@ -18,7 +18,7 @@ class User {
       }
     };
     console.log(user);
-    var createData = {
+    const createData = {
       dataType: { S: 'user' },
       id: { S: user.user_id },
       password: { S: user.user_password },
@@ -33,8 +33,8 @@ class User {
   }
 
   static read(user, resultCallback) {
-    console.log(user);
-    var res;
+    console.log("User.read: ", user);
+    let res;
     const dbResultCallback = (err, data) => {
       if (err) {
         console.log('Error at db.read\n', err);
@@ -54,7 +54,7 @@ class User {
         resultCallback(null, res);
       }
     };
-    var readData = {
+    const readData = {
       dataType: { S: 'user' },
       id: { S: user.user_id },
     };
