@@ -4,6 +4,7 @@ const crypto = require('crypto');
 const KEY = process.env.TOKEN_KEY;
 
 exports.createToken = async (req, res) => {
+  const user = new User(req.body);
   const resultCallback = (err, data) =>
     crypto.pbkdf2(
       req.body.userPassword,
