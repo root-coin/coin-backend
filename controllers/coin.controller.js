@@ -21,7 +21,7 @@ exports.getCoinChart = (req, res, next) => {
     const seriesData = [];
     const seriesDataLinear = [];
     data.forEach((element) => {
-      const str = element.id.S;
+      const str = element.id.S.split('/')[1];
       const time1 =
         str.substring(0, 4) +
         '/' +
