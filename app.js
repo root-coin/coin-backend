@@ -4,6 +4,7 @@ const path = require('path');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 require('dotenv').config();
 
@@ -12,6 +13,13 @@ const index = require('./routes/index');
 const app = express();
 
 app.use(logger('dev'));
+app.use(
+  cors({
+    origin: 'http://example.com',
+    credentials: true, // cors, axios에서 둘 다 true로
+    optionsSuccessStatus: 200,
+  })
+);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
