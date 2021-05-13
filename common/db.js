@@ -33,7 +33,7 @@ exports.read = (item, resultCallback) => {
     if (err) {
       resultCallback(err, null);
     } else {
-      resultCallback(null, data);
+      resultCallback(null, data.Item);
     }
   });
 };
