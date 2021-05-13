@@ -1,7 +1,7 @@
 const Coin = require('../models/coin.model');
 
-exports.getCoinPrice = (req, res, next) => {};
-exports.getCoinsPrice = (req, res, next) => {
+exports.getCoinsPrice = (req, res, next) => {};
+exports.getCoinPrice = (req, res, next) => {
   const { coinId } = req.params;
   Coin.read(coinId, (err, data) => {
     if (err) {
@@ -12,18 +12,30 @@ exports.getCoinsPrice = (req, res, next) => {
     const seriesData = [];
     const seriesDataLinear = [];
     data.forEach((element) => {
+      const str = element.id.S;
+      const time1 =
+        str.substring(0, 4) +
+        '/' +
+        str.substring(4, 6) +
+        '/' +
+        str.substring(6, 8) +
+        ' ' +
+        str.substring(8, 10) +
+        ':' +
+        str.substring(10, 12) +
+        ':00';
       const price = {
-        x: element.id,
+        x: new Date(time1),
         y: [
-          element.height_price,
-          element.lowest_price,
-          element.average_price,
-          element.start_price,
+          Number(element.height_price.N),
+          Number(element.lowest_price.N),
+          Number(element.average_price.N),
+          Number(element.start_price.N),
         ],
       };
       const amount = {
-        x: element.id,
-        y: element.trade_amount,
+        x: new Date(time1),
+        y: Number(element.total_amount.N),
       };
       seriesData.push(price);
       seriesDataLinear.push(amount);
