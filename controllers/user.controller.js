@@ -43,7 +43,7 @@ exports.createToken = async (req, res) => {
             }
           );
           res.cookie('loginTK', token, {
-            httpOnly: true,
+            httpOnly: false,
             secure: true,
             sameSite: 'Lax',
           });
@@ -64,7 +64,7 @@ exports.createToken = async (req, res) => {
 
 exports.logout = (req, res) => {
   res.cookie('loginTK', '', {
-    httpOnly: true,
+    httpOnly: false,
     secure: true,
     sameSite: 'Lax',
   });
