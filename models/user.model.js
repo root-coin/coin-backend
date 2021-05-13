@@ -11,9 +11,11 @@ class User {
     const dbResultCallback = (err, data) =>{
       if(err){
         console.log("Error at db.create\n", err);
+        resultCallback(err, data);
       }
       else{
         console.log("Success\n", data);
+        resultCallback(null, 'good');
       }
     }
     console.log(user);
@@ -25,7 +27,6 @@ class User {
       'salt': {S: user.salt}
     }
     db.create(createData, dbResultCallback);
-    resultCallback(null, 'good');
   }
 
   static update(user, resultCallback) {
@@ -38,6 +39,7 @@ class User {
     const dbResultCallback = (err, data) =>{
       if(err){
         console.log("Error at db.read\n", err);
+        resultCallback(err, data);
       }
       else{
         console.log("Success\n", data);
@@ -47,6 +49,7 @@ class User {
           "user_nickname": data.nickname.S,
           "salt": data.salt.S
         }
+        resultCallback(null, res);
       }
     }
     var readData = {
@@ -54,7 +57,6 @@ class User {
       'id': user.user_id
     };
     db.read(readData, dbResultCallback);
-    resultCallback(null, res);
   }
 
   static delete(user, resultCallback) {
@@ -62,9 +64,11 @@ class User {
     const dbResultCallback = (err, data) =>{
       if(err){
         console.log("Error at db.delete\n", err);
+        resultCallback(err, data);
       }
       else{
         console.log("Success\n", data);
+        resultCallback(null, data);
       }
     }
     var deleteData = {
@@ -72,7 +76,6 @@ class User {
       'id': user.user_id
     };
     db.delete(deleteData, dbResultCallback);
-    resultCallback(null, res);
   }
 }
 
