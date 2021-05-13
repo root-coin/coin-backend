@@ -1,6 +1,10 @@
-var AWS = require('aws-sdk');
-AWS.config.update({ region: 'ap-northeast-2' });
-var ddb = new AWS.DynamoDB();
+const AWS = require('aws-sdk');
+AWS.config = {
+  accessKeyId: process.env.aws_access_key_id,
+  secretAccessKey: process.env.aws_secret_access_key,
+  region: 'ap-northeast-2',
+};
+const ddb = new AWS.DynamoDB();
 
 exports.create = (item, resultCallback) => {
   var params = {
