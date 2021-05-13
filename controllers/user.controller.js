@@ -83,3 +83,18 @@ exports.new = (req, res, next) => {
     );
   });
 };
+
+exports.checkId = (req, res, next) => {
+  const { userId } = req.body;
+  User.find(userId, (err, result) => {
+    if (err) {
+      res.status(500).send({ err });
+      return;
+    }
+    if (result) {
+      next();
+    } else {
+      res.status(409).send({ err: 'not uniform' });
+    }
+  });
+};
