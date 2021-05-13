@@ -12,10 +12,8 @@ exports.create = (item, resultCallback) => {
 
     ddb.putItem(params, function(err, data){
         if(err){
-            console.log("Error", err);
             resultCallback(err, data);
         } else{
-            console.log("Success", data);
             resultCallback(null, data);
         }
     });
@@ -29,10 +27,8 @@ exports.read = (item, resultCallback) => {
 
     ddb.getItem(params, function(err, data){
         if(err){
-            console.log("Error", err);
             resultCallback(err, data);
         } else{
-            console.log("Success", data.Item);
             resultCallback(null, data);
         }
     });

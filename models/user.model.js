@@ -37,7 +37,7 @@ class User {
     var res;
     const dbResultCallback = (err, data) =>{
       if(err){
-        console.log("Error at db.create\n", err);
+        console.log("Error at db.read\n", err);
       }
       else{
         console.log("Success\n", data);
@@ -58,7 +58,21 @@ class User {
   }
 
   static delete(user, resultCallback) {
-    console.log(user)
+    console.log(user);
+    const dbResultCallback = (err, data) =>{
+      if(err){
+        console.log("Error at db.delete\n", err);
+      }
+      else{
+        console.log("Success\n", data);
+      }
+    }
+    var deleteData = {
+      'dataType': {S: 'user'},
+      'id': user.user_id
+    };
+    db.delete(deleteData, dbResultCallback);
+    resultCallback(null, res);
   }
 }
 
