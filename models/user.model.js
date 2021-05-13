@@ -8,6 +8,14 @@ class User {
   }
 
   static create(user, resultCallback) {
+    const dbResultCallback = (err, data) =>{
+      if(err){
+        console.log("Error at db.create\n", err);
+      }
+      else{
+        console.log("Success\n", data);
+      }
+    }
     console.log(user);
     var createData = {
       'dataType': {S: 'user'},
@@ -16,10 +24,7 @@ class User {
       'nickname': {S: user.user_nickname},
       'salt': {S: user.salt}
     }
-    var res = db.create(createData);
-    if(res == 1){
-      console.log("Error at User.create\n");
-    }
+    db.create(createData, dbResultCallback);
     resultCallback(null, 'good');
   }
 
@@ -29,14 +34,26 @@ class User {
 
   static read(user, resultCallback) {
     console.log(user);
+    var res;
+    const dbResultCallback = (err, data) =>{
+      if(err){
+        console.log("Error at db.create\n", err);
+      }
+      else{
+        console.log("Success\n", data);
+        res = {
+          "user_id": data.id.S,
+          "user_password": data.password.S,
+          "user_nickname": data.nickname.S,
+          "salt": data.salt.S
+        }
+      }
+    }
     var readData = {
       'dataType': {S: 'user'},
       'id': user.user_id
     };
-    var res = db.read(readData);
-    if(res == 1){
-      console.log("Error at User.read()");
-    }
+    db.read(readData, dbResultCallback);
     resultCallback(null, res);
   }
 

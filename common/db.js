@@ -2,7 +2,7 @@ var AWS = require('aws-sdk');
 AWS.config.update({region: 'ap-northeast-2'});
 var ddb = new AWS.DynamoDB();
 
-exports.create = (item) => {
+exports.create = (item, resultCallback) => {
     var params = {
         TableName: 'coin',
         Item: item
@@ -13,15 +13,15 @@ exports.create = (item) => {
     ddb.putItem(params, function(err, data){
         if(err){
             console.log("Error", err);
-            return 1;
+            resultCallback(err, data);
         } else{
             console.log("Success", data);
-            return 0;
+            resultCallback(null, data);
         }
     });
 }
 
-exports.read = (item) => {
+exports.read = (item, resultCallback) => {
     var params = {
         TableName: 'coin',
         Key: item
@@ -30,15 +30,15 @@ exports.read = (item) => {
     ddb.getItem(params, function(err, data){
         if(err){
             console.log("Error", err);
-            return 1;
+            resultCallback(err, data);
         } else{
             console.log("Success", data.Item);
-            return data.Item;
+            resultCallback(null, data);
         }
     });
 }
 
-exports.delete = (item) => {
+exports.delete = (item, resultCallback) => {
     var params = {
         TableName: 'coin',
         Key: item
@@ -46,9 +46,9 @@ exports.delete = (item) => {
 
     ddb.deleteItem(params, function(err, data){
         if(err){
-            console.log("Error", err);
+            resultCallback(err, data);
         } else{
-            console.log("Success", data);
+            resultCallback(null, data);
         }
     });
 }
