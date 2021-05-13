@@ -21,6 +21,18 @@ exports.create = (item, resultCallback) => {
   });
 };
 
+exports.batchCreate = (params, resultCallback) => {
+  console.log(params);
+
+  ddb.batchWriteItem(params, function (err, data) {
+    if (err) {
+      resultCallback(err, null);
+    } else {
+      resultCallback(null, data);
+    }
+  });
+};
+
 exports.read = (item, resultCallback) => {
   const params = {
     TableName: 'coin',

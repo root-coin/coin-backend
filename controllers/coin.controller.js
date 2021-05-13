@@ -37,7 +37,8 @@ exports.getCoinsPrice = (req, res, next) => {
 };
 
 exports.saveInfo = (req, res, next) => {
-  Coin.create(req.body, (err, result) => {
+  const { data } = req.body;
+  Coin.create(data, (err, result) => {
     if (err) {
       res.status(500).send(err);
       return;
