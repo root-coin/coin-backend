@@ -55,7 +55,7 @@ exports.logout = (req, res) => {
 
 exports.new = (req, res, next) => {
   const user = new User(req.body);
-
+  console.log(user);
   crypto.randomBytes(64, (randomErr, buf) => {
     if (randomErr) {
       throw randomErr;
@@ -73,6 +73,7 @@ exports.new = (req, res, next) => {
         }
         user.user_password = derivedKey.toString('hex');
         user.salt = salt;
+        console.log(user);
         User.create(user, (err, result) => {
           if (err) {
             res.status(500).send({ err });
@@ -86,16 +87,16 @@ exports.new = (req, res, next) => {
 };
 
 exports.checkId = (req, res, next) => {
-  const { userId } = req.body;
-  User.find(userId, (err, result) => {
+  const user = new User(req.body);
+  User.read(user, (err, result) => {
     if (err) {
       res.status(500).send({ err });
       return;
     }
     if (result) {
-      next();
-    } else {
       res.status(409).send({ err: 'not uniform' });
+    } else {
+      next();
     }
   });
 };
