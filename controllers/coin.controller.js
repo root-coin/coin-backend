@@ -52,6 +52,7 @@ exports.saveInfo = (req, res, next) => {
   const { data } = req.body;
   Coin.create(data, (err, result) => {
     if (err) {
+      console.log(err);
       res.status(500).send(err);
       return;
     }
