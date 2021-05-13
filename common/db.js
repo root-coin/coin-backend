@@ -11,7 +11,7 @@ exports.create = (item, resultCallback) => {
     TableName: 'coin',
     Item: item,
   };
-  //console.log(params);
+  console.log(params);
   ddb.putItem(params, function (err, data) {
     if (err) {
       resultCallback(err, null);
