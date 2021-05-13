@@ -1,7 +1,16 @@
 const Coin = require('../models/coin.model');
+const User = require('../models/user.model');
 
-exports.getCoinsPrice = (req, res, next) => {};
-exports.getCoinPrice = (req, res, next) => {
+exports.getCoinsPrice = (req, res, next) => {
+  Coin.reandAll((err, data) => {
+    if (err) {
+      res.status(500).send(err);
+      return;
+    }
+    res.status(200).send(data);
+  });
+};
+exports.getCoinChart = (req, res, next) => {
   const { coinId } = req.params;
   Coin.read(coinId, (err, data) => {
     if (err) {
@@ -59,5 +68,36 @@ exports.saveInfo = (req, res, next) => {
       return;
     }
     res.status(200).send(result);
+  });
+};
+
+exports.buy = (req, res, next) => {
+  const { coinId } = req.params;
+  const { userId } = res.locals;
+  const { quantity } = req.body;
+  Coin.read(coinId, (err, data) => {
+    if (err) {
+      res.status(500).send({ err });
+      return;
+    }
+    console.log(data);
+    const needPoint = Number(data[0].average_price.N) * quantity;
+    const coinData = {
+      id: coinId,
+      quantity,
+      price: Number(data[0].average_price.N),
+    };
+    User.buy(userId, coinData, needPoint, (err, result) => {
+      if (err) {
+        console.log(err);
+        res.status(500).send(err);
+        return;
+      }
+      if (result.status === 400) {
+        res.status(400).send({ result: '포인트가 부족합니다.' });
+        return;
+      }
+      res.status(200).send(result);
+    });
   });
 };
