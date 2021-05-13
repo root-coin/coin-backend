@@ -4,7 +4,7 @@ const auth = require('../common/auth');
 
 router.post('/new', user.checkId, user.new);
 
-router.post('/login', auth.verifyToken, user.createToken);
+router.post('/login', user.createToken);
 
 router.get('/logout', user.logout);
 
