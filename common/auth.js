@@ -5,7 +5,7 @@ const KEY = process.env.TOKEN_KEY;
 exports.verifyToken = (req, res, next) => {
   try {
     const { loginTK } = req.cookies;
-
+    console.log(req.cookies);
     if (!loginTK) {
       res.status(401).json({ error: 'Token information is not provided.' });
       return;

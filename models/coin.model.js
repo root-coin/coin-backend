@@ -53,6 +53,8 @@ class Coin {
       resultCallback(null, result);
     });
   }
+
+  static readAll(resultCallback) {}
 }
 
 module.exports = Coin;

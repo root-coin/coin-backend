@@ -5,22 +5,21 @@ const KEY = process.env.TOKEN_KEY;
 
 exports.createToken = async (req, res) => {
   const user = new User(req.body);
-  const resultCallback = (err, data) =>{
+  const resultCallback = (err, data) => {
     //console.log(data);
-    if(err){
-      console.log("Error at createToken: ", err);
+    if (err) {
+      console.log('Error at createToken: ', err);
       res.status(500).send({
-        result: "Internal Error"
+        result: 'Internal Error',
       });
       return;
-    }
-    else if(data === undefined || data === null){
+    } else if (data === undefined || data === null) {
       res.status(400).send({
-        result: "Failed to login"
+        result: 'Failed to login',
       });
       return;
     }
-      crypto.pbkdf2(
+    crypto.pbkdf2(
       req.body.userPassword,
       data.salt,
       100000,
@@ -44,7 +43,7 @@ exports.createToken = async (req, res) => {
           );
           res.cookie('loginTK', token, {
             httpOnly: false,
-            secure: true,
+            secure: false,
             sameSite: 'Lax',
           });
           res.status(200).send({ result: 'success' });
@@ -52,10 +51,11 @@ exports.createToken = async (req, res) => {
           res.status(400).send({ result: 'Password Mismatch\n' });
         }
       }
-    );}
-  if(user.user_id == "" || user.user_password == ""){
+    );
+  };
+  if (user.user_id == '' || user.user_password == '') {
     res.status(400).send({
-      result: 'No input'
+      result: 'No input',
     });
     return;
   }
@@ -75,9 +75,9 @@ exports.logout = (req, res) => {
 exports.new = (req, res, next) => {
   const user = new User(req.body);
   console.log(user);
-  if(user.user_id == "" || user.user_password == ""){
+  if (user.user_id == '' || user.user_password == '') {
     res.status(400).send({
-      result: 'No input'
+      result: 'No input',
     });
     return;
   }
@@ -101,7 +101,7 @@ exports.new = (req, res, next) => {
         console.log(user);
         User.create(user, (err, result) => {
           if (err) {
-            console.log("err:", err);
+            console.log('err:', err);
             res.status(500).send({ err });
             return;
           }
@@ -114,15 +114,15 @@ exports.new = (req, res, next) => {
 
 exports.checkId = (req, res, next) => {
   const user = new User(req.body);
-  if(user.user_id == "" || user.user_password == ""){
+  if (user.user_id == '' || user.user_password == '') {
     res.status(400).send({
-      result: 'No input'
+      result: 'No input',
     });
     return;
   }
   User.read(user, (err, result) => {
     if (err) {
-      console.log("error: ", err);
+      console.log('error: ', err);
       res.status(500).send({ err });
       return;
     }
@@ -132,4 +132,8 @@ exports.checkId = (req, res, next) => {
       next();
     }
   });
+};
+
+exports.getInfo = (req, res, next) => {
+  const { user_id } = res.locals;
 };
